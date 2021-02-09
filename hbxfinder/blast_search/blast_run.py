@@ -19,8 +19,10 @@ args = parse.parse_args()
 
 
 db_list = []
+sp_name_list = []
 for fasta in glob.glob(args.path + "*.fasta"):
-        sp_fasta = fasta.split('/')[-1]
+        sp_fasta = fasta.split('/')[-1].split('.fa')[0]
+        sp_name_list.append(sp_fasta)
         db_list.append(fasta)
 
 #Do tBLASTn search using genome fasta file
@@ -32,10 +34,9 @@ def hbx_blast(fasta):
         #Make blast database from genome fasta files
         unix('makeblastdb -dbtype nucl -in ' + fasta + ' -out genome_blastdb/' + sp_name, shell=True)
         #Search for hbx genes in unannotated genomes
-        unix('tblastn -query ../../hbx_data/homeobox.fasta -db genome_blastdb/' + sp_name + ' -evalue 1e-5 -num_threads 2 -seg yes -max_target_seqs 5000 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + sp_name + '.blastoutput.fa', shell=True)
+        unix('tblastn -query ../../raw/hbx_data/homeobox.fasta -db genome_blastdb/' + sp_name + ' -evalue 1 -seg yes -max_target_seqs 5000 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + sp_name + '.blastoutput.fa', shell=True)
 
-Parallel(n_jobs=44)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)
-
+Parallel(n_jobs=10)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)
 
 
 #Parse tBLASTn output to get sequences for reciprocal BLASTx search
@@ -43,7 +44,8 @@ print('\n')
 print('Parsing BLAST output...')
 #os.mkdir('recip_blast')
 assemb_sp = {}
-for blast_out in glob.glob("*.fa"):
+for blast_out in sp_name_list:
+        blast_output = blast_out + '.blastoutput.fa'
         sp = blast_out.split('.')[0]
         sp_assem = blast_out.split('.blastout')[0]
         assemb_sp[sp_assem] = sp
@@ -74,15 +76,15 @@ for assemb, sp in assemb_sp.items():
                         perc_ident = lines[3]
                         qstart = lines[5]
                         qend = lines[6]
-                        sstart = int(lines[8])
-                        send = int(lines[9])
-                        subject_range = (sstart, send)
+                        #sstart = int(lines[8])
+                        #send = int(lines[9])
+                        #subject_range = (sstart, send)
                         
                         blast_hit = []
-                        if sstart < send:
-                                sstart = sstart - 10
-                                send = send + 10
-                                for i in range(sstart, send):
+                        if int(lines[8]) < int(lines[9]):
+                                sstart = int(lines[8]) - 10
+                                send = int(lines[9]) + 10
+                                for i in range(sstart, send + 1):
                                         try:
                                                 nuc = scaff_nuc_seq[i]
                                                 blast_hit.append(nuc)
@@ -90,9 +92,9 @@ for assemb, sp in assemb_sp.items():
                                         except:
                                                 continue
                         else:
-                                sstart = sstart + 10
-                                send = send - 10
-                                for i in range(send, sstart):
+                                sstart = int(lines[9]) - 10
+                                send = int(lines[8]) + 10
+                                for i in range(sstart, send + 1):
                                         try:
                                                 nuc = scaff_nuc_seq[i]
                                                 blast_hit.append(nuc)
@@ -101,6 +103,6 @@ for assemb, sp in assemb_sp.items():
                                                 continue
                         blast_hit = ''.join(blast_hit)
                         
-                        outF.write('>' + assemb + '|' + hbx_gene +  '|' + scaff + '|' + str(sstart) + '|' + str(send) + '|' + orientation + '\n' + blast_hit + '\n')
+                        outF.write('>' + assemb + '|' + hbx_gene +  '|' + scaff + '|' + str(sstart + 10) + '|' + str(send - 10) + '|' + orientation + '\n' + blast_hit + '\n')
                         
 outF.close()
