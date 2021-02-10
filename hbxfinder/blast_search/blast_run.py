@@ -51,7 +51,7 @@ for blast_out in sp_name_list:
         assemb_sp[sp_assem] = sp
         
 
-outF = open('recip_blast/best_assemb_recipBlast.fasta', 'w')
+outF = open('recip_blast/genome_recipBlast.fa', 'w')
 for assemb, sp in assemb_sp.items():
         contig_nuc_assem = {}
                 
