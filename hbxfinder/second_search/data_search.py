@@ -9,7 +9,7 @@ import os
 
 # Author: Peter Mulhair
 # Date: 15/01/2020
-# Usage python3 data_blast.py --gene <Hbx gene class> --path <path to genomes to blast against>
+# Usage python3 data_search.py --gene <Hbx gene class> --path <path to genomes to blast against>
 
 parse = argparse.ArgumentParser()
 
@@ -18,7 +18,7 @@ parse.add_argument("--path",type=str, help="path to genomes in fasta format",req
 
 args = parse.parse_args()
 
-os.mkdir('genome_hbx')
+os.makedirs('genome_hbx', exist_ok=True)
 os.mkdir('genome_hbx/' + args.gene)
 gene_orientation = {}
 def genome_data(cluster):
@@ -84,14 +84,15 @@ sp_blast_list = []
 for fasta in glob.glob("genome_hbx/" + args.gene + "/*.fasta"):
     sp_blast_list.append(fasta)
 
-os.mkdir('hbx_mmseqoutput')
+
+os.makedirs('hbx_mmseqoutput', exist_ok=True)
 def second_blast(fasta):
     sp_fasta = fasta.split('/')[-1]
     sp_assem = sp_fasta.split('.')[0]
     #Search for hbx genes with mmseq easy-search
     print('\n')
     print('Running MMseqs;',sp_assem)
-    unix('mmseqs easy-search ../../hbx_data/family_data/' + args.gene + '.fasta ' + fasta + ' hbx_mmseqoutput/' + sp_assem + '_' + args.gene + '.m8 tmp --spaced-kmer-pattern 1101111 -k 6 -a -e 1 --num-iterations 2', shell=True)
+    unix('mmseqs easy-search ../../raw/hbx_data/family_data/' + args.gene + '.fasta ' + fasta + ' hbx_mmseqoutput/' + sp_assem + '_' + args.gene + '.m8 tmp --spaced-kmer-pattern 1101111 -k 6 -a -e 1 --num-iterations 2', shell=True)
 
 Parallel(n_jobs=1)(delayed(second_blast)(sp) for sp in sp_blast_list)
 
