@@ -75,4 +75,4 @@ The last step outputs fasta files of the nucleotide and amino acid sequences for
 
 ## NOTE
 
-It is recommended to manually edit the cluster files as well as the output fasta files to ensure accuracy in the order and content of the homeobox genes.
+It is recommended to manually inspect and edit the cluster files as well as the output fasta files to ensure accuracy in the order and content of the homeobox genes.
