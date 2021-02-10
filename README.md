@@ -16,6 +16,17 @@ HbxFinder is a collection of python script that is currently run with a string o
 
 `python blast_run.py --path </path/to/genome/assemblies/> `
 
+- Required input:
+  - **`directory`** First change dir with `cd HbxFinder/hbxfinder/blast_search`. This puts you in the correct directory to run the blast script.
+  - **`genomes`** Path to raw genome assemblies you wish to search.
+- Output: Blast output files in output format 6. The most important file for the next step is present at `recip_blast/genome_recipBlast.fa`
+
+Following the initial tBLASTn search, a reciprocal BLASTx search is carried out by running:
+`python recip_blast.py`
+
+Followed by `python summarise_Hbx.py --taxa <reciprocal blastoutput file> --gene <specify class of hbx gene>`
+
+This produces an output file for each homeobox gene whic is parsed in Step 2.
 
 ### Step 2: Run	second more sensitive sequence similarity search with MMseqs
 
