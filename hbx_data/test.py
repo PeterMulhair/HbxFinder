@@ -9,7 +9,10 @@ from Bio import SeqIO
 
 with open('hbx_naming.json') as f:
     hbx_dict = json.load(f)
-
+for k, v in hbx_dict.items():
+    print(k)
+    print(v)
+'''    
 homeobox_dict = {}
 with open('homeobox.fasta') as f:
     for record in SeqIO.parse(f, 'fasta'):
@@ -26,3 +29,4 @@ for k, v in hbx_dict.items():
                 if '|' + gene + '|' in genes:
                     outF.write('>' + genes + '\n' + seqs + '\n')
     
+'''
