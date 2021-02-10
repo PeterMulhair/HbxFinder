@@ -16,13 +16,13 @@ HbxFinder is a collection of python script that is currently run with a string o
 
 `python blast_run.py --path </path/to/genome/assemblies/> `
 
-- Required input:
+- Required:
   - **`directory`** First change dir with `cd HbxFinder/hbxfinder/blast_search`. This puts you in the correct directory to run the blast script.
   - **`genomes`** Path to raw genome assemblies you wish to search.
 - Output: Blast output files in output format 6. The most important file for the next step is present at `recip_blast/genome_recipBlast.fa`
 
 
-Following the initial tBLASTn search, a reciprocal BLASTx search is carried out followed by a parsing script by running:
+Following the initial tBLASTn search, a reciprocal BLASTx search (to identify the hbx gene) is carried out followed by a parsing script (which orders the non-overlapping hbx genes) by running:
 
 ```
 $ cd recip_blast/
@@ -42,6 +42,30 @@ The second similarity search uses MMseqs to carry out a more sensitive search of
 `python data_blast.py --gene <specify class of hbx gene> --path </path/to/genome/assemblies/> `
 
 
+- Required:
+  - **`directory`** First change dir with `cd HbxFinder/hbxfinder/second_search`. This puts you in the correct directory to run the blast script.
+  - **`genomes`** Path to raw genome assemblies you wish to search.
+  - **`gene`** Name of homeobox gene class you wish to search for eg. HOX
+
+
+This is followed again by a reciprocal BLAST script along with a parsing script.
+
+```
+$ cd recip_blast/
+
+$ python recip_blast.py
+
+$ python summarise_Hbx.py --taxa <reciprocal blastoutput file> --gene <specify class of hbx gene>
+
+```
+
 ### Step 3: Get sequence data for homeobox genes
 
+The last step outputs the nucleotide and amino acid sequences for the homeodomain.
+
 `python get_seq_data.py --gene <specify class of hbx gene> `
+
+
+- Required:
+  - **`directory`** First change dir with `cd HbxFinder/hbxfinder/HD_AA_sequences/`
+  - **`gene`** Name of homeobox gene class you wish to parse eg. HOX
