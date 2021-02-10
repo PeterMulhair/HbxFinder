@@ -10,7 +10,7 @@ HbxFinder is a pipeline for identification and characterisation of homeobox gene
 
 ## Usage
 
-HbxFinder is a collection of python script that is currently run with a string of commands.
+HbxFinder is a collection of python scripts that is currently run with a string of commands.
 
 ### Step 1: Run initial broad tBLASTn search
 
@@ -18,7 +18,7 @@ HbxFinder is a collection of python script that is currently run with a string o
 
 - Required:
   - **`directory`** First change dir with `cd HbxFinder/hbxfinder/blast_search`. This puts you in the correct directory to run the blast script.
-  - **`genomes`** Path to raw genome assemblies you wish to search.
+  - **`genomes`** Path to a folder containing the raw genome assemblies you wish to search.
 - Output: Blast output files in output format 6. The most important file for the next step is present at `recip_blast/genome_recipBlast.fa`
 
 
@@ -33,7 +33,7 @@ $ python summarise_Hbx.py --taxa <reciprocal blastoutput file> --gene <specify c
 
 ```
 
-This produces an output file for each homeobox gene which is parsed in Step 2.
+This produces an output file for each homeobox gene class which is parsed in Step 2.
 
 ### Step 2: Run	second more sensitive sequence similarity search with MMseqs
 
@@ -61,7 +61,7 @@ $ python summarise_Hbx.py --taxa <reciprocal blastoutput file> --gene <specify c
 
 ### Step 3: Get sequence data for homeobox genes
 
-The last step outputs the nucleotide and amino acid sequences for the homeodomain.
+The last step outputs fasta files of the nucleotide and amino acid sequences for the homeodomain of each homeobox gene class.
 
 `python get_seq_data.py --gene <specify class of hbx gene> `
 
@@ -69,3 +69,9 @@ The last step outputs the nucleotide and amino acid sequences for the homeodomai
 - Required:
   - **`directory`** First change dir with `cd HbxFinder/hbxfinder/HD_AA_sequences/`
   - **`gene`** Name of homeobox gene class you wish to parse eg. HOX
+
+
+
+##NOTE
+
+It is recommended to manually edit the cluster files as well as the output fasta files to ensure accuracy in the order and content of the homeobox genes.
