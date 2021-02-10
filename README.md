@@ -71,7 +71,8 @@ The last step outputs fasta files of the nucleotide and amino acid sequences for
   - **`gene`** Name of homeobox gene class you wish to parse eg. HOX
 
 
+---
 
-##NOTE
+## NOTE
 
 It is recommended to manually edit the cluster files as well as the output fasta files to ensure accuracy in the order and content of the homeobox genes.
