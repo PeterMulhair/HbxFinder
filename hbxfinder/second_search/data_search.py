@@ -9,7 +9,7 @@ import os
 
 # Author: Peter Mulhair
 # Date: 15/01/2020
-# Usage python3 data_search.py --gene <Hbx gene class> --path <path to genomes to blast against>
+# Usage python3 data_blast.py --gene <Hbx gene class> --path <path to genomes to blast against>
 
 parse = argparse.ArgumentParser()
 
@@ -18,8 +18,13 @@ parse.add_argument("--path",type=str, help="path to genomes in fasta format",req
 
 args = parse.parse_args()
 
+finished_genome = []
+for blastparse in glob.glob('genome_hbx/' + args.gene + '/*fasta'):
+    genome = blastparse.split('/')[-1].split('_blastRegion')[0]
+    finished_genome.append(genome)
+    
 os.makedirs('genome_hbx', exist_ok=True)
-os.mkdir('genome_hbx/' + args.gene)
+os.makedirs('genome_hbx/' + args.gene, exist_ok=True)
 gene_orientation = {}
 def genome_data(cluster):
     print('Parsing first BLAST run...')
@@ -63,8 +68,8 @@ def genome_data(cluster):
                             
                             for gene in reg:
                                 blast_hit = []
-                                gene_start = gene[0] - 300
-                                gene_end = gene[1] + 300
+                                gene_start = gene[0] - 1000
+                                gene_end = gene[1] + 1000
                                 gene_range = range(gene_start, gene_end + 1)
                                 for i in gene_range:
                                     try:
@@ -78,13 +83,14 @@ def genome_data(cluster):
 
 genome_data(args.gene)
 
-
-
 sp_blast_list = []
 for fasta in glob.glob("genome_hbx/" + args.gene + "/*.fasta"):
-    sp_blast_list.append(fasta)
+    sp_fasta = fasta.split('/')[-1].split('_blastRegion')[0]
+    if sp_fasta not in finished_genome:       
+        sp_blast_list.append(fasta)
 
 
+mmseq_outfile = []
 os.makedirs('hbx_mmseqoutput', exist_ok=True)
 def second_blast(fasta):
     sp_fasta = fasta.split('/')[-1]
@@ -93,7 +99,8 @@ def second_blast(fasta):
     print('\n')
     print('Running MMseqs;',sp_assem)
     unix('mmseqs easy-search ../../raw/hbx_data/family_data/' + args.gene + '.fasta ' + fasta + ' hbx_mmseqoutput/' + sp_assem + '_' + args.gene + '.m8 tmp --spaced-kmer-pattern 1101111 -k 6 -a -e 1 --num-iterations 2', shell=True)
-
+    mmseq_outfile.append(sp_assem + '_' + args.gene + '.m8')
+        
 Parallel(n_jobs=1)(delayed(second_blast)(sp) for sp in sp_blast_list)
 
 
@@ -102,10 +109,11 @@ Parallel(n_jobs=1)(delayed(second_blast)(sp) for sp in sp_blast_list)
 print('\n')
 print('Parsing MMseqs output...')
 
-outF = open('recip_blast/genome_' + args.gene + '_recipBlast.fasta', 'a+')
-for mmseq_out in glob.glob('hbx_mmseqoutput/*' + args.gene + '.m8'):
-    mmseq_file = mmseq_out.split('/')[-1]
-    sp = mmseq_file.split('_' + args.gene)[0]
+outF = open('recip_blast/genome_' + args.gene + '_recipBlast1.fasta', 'a+')
+#for mmseq_out in glob.glob('hbx_mmseqoutput/*' + args.gene + '.m8'):
+for mmseq_out in mmseq_outfile:
+    #mmseq_file = mmseq_out.split('/')[-1]
+    sp = mmseq_out.split('_' + args.gene)[0]
 
     contig_nuc_assem = {}
     for blastRegion_file in glob.glob('genome_hbx/' + args.gene + '/' + sp + '*.fasta'):
@@ -116,7 +124,7 @@ for mmseq_out in glob.glob('hbx_mmseqoutput/*' + args.gene + '.m8'):
                 contig_nuc_assem[contig] = seq
             
     print(sp)
-    with open(mmseq_out) as f:
+    with open('hbx_mmseqoutput/' + mmseq_out) as f:
         for line in f:
             lines = line.split('\t')
             geneID = lines[0]
@@ -124,8 +132,8 @@ for mmseq_out in glob.glob('hbx_mmseqoutput/*' + args.gene + '.m8'):
             scaff = lines[1]
             scaff_nuc_seq = contig_nuc_assem[scaff]
             contig = scaff.split('|')[0]
-            hbx_start = int(scaff.split('|')[1]) + 300
-            hbx_end = int(scaff.split('|')[2]) - 300
+            hbx_start = int(scaff.split('|')[1]) + 1000
+            hbx_end = int(scaff.split('|')[2]) - 1000
             hbx_len = hbx_start, hbx_end
             hbx_orientation = gene_orientation[hbx_len]
                         
