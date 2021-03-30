@@ -17,11 +17,11 @@ parse.add_argument("--gene",type=str, help="name of homeobox gene to obtain resu
 args = parse.parse_args()
 
 
-sp_name = args.taxa.split('.')[0]
+sp_name = args.taxa.split('.')[1].split('_')[1]
 print('Parsing', sp_name, args.gene, 'gene content...')
 
 ##Open dictionary of Homeodomain classes and their genes
-with open('../../../hbx_data/hbx_naming.json') as f:
+with open('../../../raw/hbx_data/hbx_naming.json') as f:
     hbx_naming_dict = json.load(f)
 
 

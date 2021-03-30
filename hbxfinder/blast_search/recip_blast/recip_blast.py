@@ -1,21 +1,30 @@
 #!/usr/bin/env python3
 from subprocess import call as unix
+import argparse
 
 # Author: Peter Mulhair
 # Date: 15/01/2020
 # Usage python3 recip_blast.py
 
 
+parse = argparse.ArgumentParser()
+
+parse.add_argument("--infile",type=str, help="input file to run reciprocal BLAST on",required=True)
+parse.add_argument("--outfile",type=str, help="output file name from reciprocal BLAST run",required=True)
+
+args = parse.parse_args()
+
+
 #Run reciprocal blast
 print('Running reciprocal BLASTx search...')
-unix('blastx -query best_assemb_recipBlast.fasta -db ../../../hbx_data/homeobox -evalue 1e-5 -num_threads 10 -seg yes -max_target_seqs 1 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out recipBlast_homeodomains.fa', shell=True)
+unix('blastx -query ' + args.infile + ' -db ../../../raw/hbx_data/homeobox -evalue 1e-5 -num_threads 4 -seg yes -max_target_seqs 1 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + args.outfile, shell=True)
 
 
 #Parse reciprocal BLASTx output
 print('\n')
 print('Parsing reciprocal BLAST output...')
 sp_assem_list = {}
-with open('recipBlast_homeodomains.fa') as f:
+with open(args.outfile) as f:
     for line in f:
         sp = line.split('.')[0]
         sp_assem = line.split('|')[0]
@@ -25,7 +34,7 @@ with open('recipBlast_homeodomains.fa') as f:
 
 for assemb, species in sp_assem_list.items():
     print(species)
-    with open('recipBlast_homeodomains.fa') as f, open(assemb + '_hbx.fasta', 'w') as outF:
+    with open(args.outfile) as f, open(assemb + '_hbx.fasta', 'w') as outF:
         for line in f:
             line = line.strip()
             sp = line.split('.')[0]
