@@ -40,7 +40,7 @@ def hbx_blast(fasta):
         #Search for hbx genes in unannotated genomes
         unix('tblastn -query ../../raw/hbx_data/homeobox.fasta -db genome_blastdb/' + sp_name + ' -evalue 1 -seg yes -max_target_seqs 5000 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + sp_name + '.blastoutput.fa', shell=True)
 
-Parallel(n_jobs=45)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)
+Parallel(n_jobs=5)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)
 
 
 #Parse tBLASTn output to get sequences for reciprocal BLASTx search
@@ -55,7 +55,7 @@ for blast_out in sp_name_list:
         assemb_sp[sp_assem] = sp
         
 
-outF = open('recip_blast/best_assemb_recipBlast3.fa', 'w')
+outF = open('recip_blast/best_assemb_recipBlast.fa', 'w')
 for assemb, sp in assemb_sp.items():
         contig_nuc_assem = {}
                 
@@ -80,9 +80,6 @@ for assemb, sp in assemb_sp.items():
                         perc_ident = lines[3]
                         qstart = lines[5]
                         qend = lines[6]
-                        #sstart = int(lines[8])
-                        #send = int(lines[9])
-                        #subject_range = (sstart, send)
                         
                         blast_hit = []
                         if int(lines[8]) < int(lines[9]):
