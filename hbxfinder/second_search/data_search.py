@@ -109,8 +109,7 @@ Parallel(n_jobs=1)(delayed(second_blast)(sp) for sp in sp_blast_list)
 print('\n')
 print('Parsing MMseqs output...')
 
-outF = open('recip_blast/genome_' + args.gene + '_recipBlast1.fasta', 'a+')
-#for mmseq_out in glob.glob('hbx_mmseqoutput/*' + args.gene + '.m8'):
+outF = open('recip_blast/genome_' + args.gene + '_recipBlast.fasta', 'a+')
 for mmseq_out in mmseq_outfile:
     #mmseq_file = mmseq_out.split('/')[-1]
     sp = mmseq_out.split('_' + args.gene)[0]
