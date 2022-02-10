@@ -3,6 +3,7 @@ import argparse
 from collections import defaultdict, OrderedDict
 import json
 import os
+import glob
 
 # Author: Peter Mulhair
 # Date: 15/01/2020
@@ -13,15 +14,24 @@ parse = argparse.ArgumentParser()
 
 parse.add_argument("--taxa",type=str, help="name of species HOX results to parse",required=True)
 parse.add_argument("--gene",type=str, help="name of homeobox gene to obtain results for",required=True)
+parse.add_argument("--path",type=str, help="path to genome fasta files",required=True)
 
 args = parse.parse_args()
 
+GCA2sp = {}
+for fasta in glob.glob(args.path + '*fasta'):
+    genome = fasta.split('/')[-1]
+    GCA = genome.split('.')[0]
+    sp = genome.split('.')[1].split('_')[1]
+    GCA2sp[GCA] = sp
+    
 sp_file = args.taxa.split('/')[-1]
-sp_name = sp_file.split('_')[0]
-print('Parsing', sp_name, args.gene, 'gene content...')
+sp_name = sp_file.split('_' + args.gene)[0]
+species = GCA2sp[sp_name]
+print('Parsing', species, args.gene, 'gene content...')
 
 ##Open dictionary of Homeodomain classes and their genes
-with open('../../../hbx_data/hbx_naming.json') as f:
+with open('../../../raw/hbx_data/hbx_naming.json') as f:
     hbx_naming_dict = json.load(f)
 
 
@@ -66,8 +76,9 @@ hbx_gene_dict = hbx_naming_dict[args.gene]
 os.makedirs('hbx_clusters', exist_ok=True)
 outF = open('hbx_clusters/' + args.gene + '_cluster.txt', 'a+')
 sp_assem = args.taxa.split('/')[-1].split('_' + args.gene)[0]
+species_name = GCA2sp[sp_assem]
 #print(sp_assem)
-outF.write('>' + sp_assem + '\n')
+outF.write('>' + sp_assem + '_' + species_name + '\n')
 for contig, seq_range_list in contig_seq_ranges.items():
 
     seq_ranges_dict = defaultdict(list)
@@ -105,7 +116,7 @@ for contig, seq_range_list in contig_seq_ranges.items():
         if overlap == False:
             subset_gene_list.append(range_i)
 
-    for ranges in subset_gene_list:
+    for ranges in sorted(subset_gene_list, key=lambda r: r.start):
         range_genes = contig_seq_range_sub_gene[contig]
         range_perc = contig_seq_range_perc_ident[contig]
         range_gene = range_genes[ranges]
