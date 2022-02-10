@@ -27,7 +27,7 @@ Following the initial tBLASTn search, a reciprocal BLASTx search (to identify th
 ```
 $ cd recip_blast/
 
-$ python recip_blast.py
+$ python recip_blast.py --infile <output from blast script> --outfile <output file name>
 
 $ python summarise_Hbx.py --taxa <reciprocal blastoutput file> --gene <specify class of hbx gene>
 
@@ -53,7 +53,7 @@ This is followed again by a reciprocal BLAST script along with a parsing script.
 ```
 $ cd recip_blast/
 
-$ python recip_blast.py
+$ python recip_blast.py --gene <specify class of hbx gene>
 
 $ python summarise_Hbx.py --taxa <reciprocal blastoutput file> --gene <specify class of hbx gene>
 
