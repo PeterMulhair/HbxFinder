@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 import glob
 from joblib import Parallel, delayed
 from subprocess import call as unix
@@ -23,11 +24,12 @@ for blastout in glob.glob("*blastoutput.fa"):
 
 db_list = []
 sp_name_list = []
-for fasta in glob.glob(args.path + "*.fasta"):
-        sp_fasta = fasta.split('/')[-1].split('.fa')[0]
-        if sp_fasta not in finished_genome:
-                sp_name_list.append(sp_fasta)
-                db_list.append(fasta)
+for fasta in glob.glob(args.path + "*"):
+        if fasta.endswith(('.fa', '.fasta', '.fas', '.fna')):
+                sp_fasta = fasta.split('/')[-1].split('.fa')[0]
+                if sp_fasta not in finished_genome:
+                        sp_name_list.append(sp_fasta)
+                        db_list.append(fasta)
 
 #Do tBLASTn search using genome fasta file
 os.makedirs('genome_blastdb', exist_ok=True)
@@ -38,24 +40,27 @@ def hbx_blast(fasta):
         #Make blast database from genome fasta files
         unix('makeblastdb -dbtype nucl -in ' + fasta + ' -out genome_blastdb/' + sp_name, shell=True)
         #Search for hbx genes in unannotated genomes
-        unix('tblastn -query ../../raw/hbx_data/homeobox.fasta -db genome_blastdb/' + sp_name + ' -evalue 1 -seg yes -max_target_seqs 5000 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + sp_name + '.blastoutput.fa', shell=True)
+        unix('tblastn -query ../../hbx_data/homeobox.fasta -db genome_blastdb/' + sp_name + ' -evalue 1 -seg yes -max_target_seqs 5000 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + sp_name + '.blastoutput.tsv', shell=True)
 
-Parallel(n_jobs=45)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)
+if len(db_list) >= 1:        
+        Parallel(n_jobs=45)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)
+else:
+        print('No new genomes to annotate')
+        sys.exit()
 
-
+        
 #Parse tBLASTn output to get sequences for reciprocal BLASTx search
 print('\n')
 print('Parsing BLAST output...')
-#os.mkdir('recip_blast')
 assemb_sp = {}
 for blast_out in sp_name_list:
-        blast_output = blast_out + '.blastoutput.fa'
+        blast_output = blast_out + '.blastoutput.tsv'
         sp = blast_out.split('.')[0]
         sp_assem = blast_out.split('.blastout')[0]
         assemb_sp[sp_assem] = sp
         
 
-outF = open('recip_blast/best_assemb_recipBlast.fa', 'w')
+outF = open('recip_blast/blast_parsed_output.tsv', 'w')
 for assemb, sp in assemb_sp.items():
         contig_nuc_assem = {}
                 
@@ -68,7 +73,7 @@ for assemb, sp in assemb_sp.items():
                                 
                                 
         print(assemb)
-        sp_blast = assemb + '.blastoutput.fa'
+        sp_blast = assemb + '.blastoutput.tsv'
         with open(sp_blast) as f:
                 for line in f:
                         lines = line.split('\t')
