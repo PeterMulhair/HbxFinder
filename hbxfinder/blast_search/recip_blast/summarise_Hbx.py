@@ -17,11 +17,11 @@ parse.add_argument("--gene",type=str, help="name of homeobox gene to obtain resu
 args = parse.parse_args()
 
 
-sp_name = args.taxa.split('.')[1].split('_')[1]
+sp_name = args.taxa.split('.')[0]
 print('Parsing', sp_name, args.gene, 'gene content...')
 
 ##Open dictionary of Homeodomain classes and their genes
-with open('../../../raw/hbx_data/hbx_naming.json') as f:
+with open('../../../hbx_data/hbx_naming.json') as f:
     hbx_naming_dict = json.load(f)
 
 
@@ -113,7 +113,6 @@ for contig, seq_range_list in contig_seq_ranges.items():
         if range_genes[ranges] in hbx_gene_dict:
             geneID = range_genes[ranges]
             hbx_geneID = hbx_gene_dict[geneID]
-            #print(contig, ranges, len(ranges), hbx_geneID, range_perc[ranges])
             gene_start = ranges[0]
             gene_end = ranges[-1]
             gene_positions = gene_start, gene_end
