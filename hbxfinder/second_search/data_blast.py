@@ -57,7 +57,8 @@ def genome_data(cluster):
                             gene_orientation[gene_len] = 'L'
                         contig_gene_region[contig].append(gene_len)
                         
-                sp_genome = (args.path + sp_name + '.fasta')
+                sp_genome = glob.glob(args.path + sp_name + '*')
+                sp_genome = sp_genome[0]
                 with open(sp_genome) as fg, open('genome_hbx/' + args.gene + '/' + sp_name + '_blastRegion.fasta', 'w') as outF:
                     for record in SeqIO.parse(fg, 'fasta'):
                         contigID = record.id
