@@ -18,20 +18,13 @@ parse.add_argument("--path",type=str, help="path to genome fasta files",required
 
 args = parse.parse_args()
 
-GCA2sp = {}
-for fasta in glob.glob(args.path + '*fasta'):
-    genome = fasta.split('/')[-1]
-    GCA = genome.split('.')[0]
-    sp = genome.split('.')[1].split('_')[1]
-    GCA2sp[GCA] = sp
     
 sp_file = args.taxa.split('/')[-1]
 sp_name = sp_file.split('_' + args.gene)[0]
-species = GCA2sp[sp_name]
-print('Parsing', species, args.gene, 'gene content...')
+print('Parsing', sp_name, args.gene, 'gene content...')
 
 ##Open dictionary of Homeodomain classes and their genes
-with open('../../../raw/hbx_data/hbx_naming.json') as f:
+with open('../../../hbx_data/hbx_naming.json') as f:
     hbx_naming_dict = json.load(f)
 
 
@@ -75,10 +68,7 @@ hbx_gene_dict = hbx_naming_dict[args.gene]
 
 os.makedirs('hbx_clusters', exist_ok=True)
 outF = open('hbx_clusters/' + args.gene + '_cluster.txt', 'a+')
-sp_assem = args.taxa.split('/')[-1].split('_' + args.gene)[0]
-species_name = GCA2sp[sp_assem]
-#print(sp_assem)
-outF.write('>' + sp_assem + '_' + species_name + '\n')
+outF.write('>' + sp_name + '\n')
 for contig, seq_range_list in contig_seq_ranges.items():
 
     seq_ranges_dict = defaultdict(list)
@@ -124,11 +114,10 @@ for contig, seq_range_list in contig_seq_ranges.items():
         if range_genes[ranges] in hbx_gene_dict:
             geneID = range_genes[ranges]
             hbx_geneID = hbx_gene_dict[geneID]
-            #print(contig, ranges, len(ranges), hbx_geneID, range_perc[ranges])
             gene_start = ranges[0]
             gene_end = ranges[-1]
             gene_positions = gene_start, gene_end
-            outF.write(contig + '\t' + str(gene_positions) + '\t' + hbx_geneID + '\t' + str(range_perc[ranges]) + '\n') 
+            outF.write(contig + '\t' + str(gene_start) + '\t' + str(gene_end) + '\t' + hbx_geneID + '\t' + str(range_perc[ranges]) + '\n')
         
         
 outF.close()
