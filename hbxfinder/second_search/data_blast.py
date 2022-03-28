@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import sys
 import glob
 from collections import defaultdict
 from Bio import SeqIO
@@ -98,11 +99,15 @@ def second_blast(fasta):
     #Search for hbx genes with mmseq easy-search
     print('\n')
     print('Running MMseqs;',sp_assem)
-    unix('mmseqs easy-search ../../raw/hbx_data/family_data/' + args.gene + '.fasta ' + fasta + ' hbx_mmseqoutput/' + sp_assem + '_' + args.gene + '.m8 tmp --spaced-kmer-pattern 1101111 -k 6 -a -e 1 --num-iterations 2', shell=True)
+    unix('mmseqs easy-search ../../hbx_data/family_data/' + args.gene + '.fasta ' + fasta + ' hbx_mmseqoutput/' + sp_assem + '_' + args.gene + '.m8 tmp --spaced-kmer-pattern 1101111 -k 6 -a -e 1 --num-iterations 2', shell=True)
     mmseq_outfile.append(sp_assem + '_' + args.gene + '.m8')
-        
-Parallel(n_jobs=1)(delayed(second_blast)(sp) for sp in sp_blast_list)
 
+
+if len(sp_blast_list) >= 1:    
+    Parallel(n_jobs=1)(delayed(second_blast)(sp) for sp in sp_blast_list)
+else:
+    print('Species already annotated')
+    sys.exit()
 
 #Parse MMseq search output to get sequences for reciprocal BLASTx search
 print('\n')
