@@ -26,7 +26,7 @@ db_list = []
 sp_name_list = []
 for fasta in glob.glob(args.path + "*"):
         if fasta.endswith(('.fa', '.fasta', '.fas', '.fna')):
-                sp_fasta = fasta.split('/')[-1].split('.fa')[0]
+                sp_fasta = fasta.split('/')[-1].split('.f')[0]
                 if sp_fasta not in finished_genome:
                         sp_name_list.append(sp_fasta)
                         db_list.append(fasta)
