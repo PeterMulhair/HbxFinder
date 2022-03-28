@@ -60,7 +60,7 @@ for blast_out in sp_name_list:
         assemb_sp[sp_assem] = sp
         
 
-outF = open('recip_blast/blast_parsed_output.tsv', 'w')
+outF = open('recip_blast/blast_parsed_output.fasta', 'w')
 for assemb, sp in assemb_sp.items():
         contig_nuc_assem = {}
                 
