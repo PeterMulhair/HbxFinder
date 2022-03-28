@@ -55,7 +55,7 @@ $ cd recip_blast/
 
 $ python recip_blast.py --gene <specify class of hbx gene>
 
-$ python summarise_Hbx.py --taxa <reciprocal blastoutput file> --gene <specify class of hbx gene>
+$ python summarise_Hbx.py --taxa species_hbx/<species reciprocal blastoutput file> --gene <specify class of hbx gene> --path <path to genome file>
 
 ```
 
