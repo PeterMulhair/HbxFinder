@@ -12,6 +12,8 @@ HbxFinder is a pipeline for identification and characterisation of homeobox gene
 
 HbxFinder is a collection of python scripts that is currently run with a string of commands.
 
+To run, download this repo locally using `git clone https://github.com/PeterMulhair/HbxFinder.git`
+
 ### Step 1: Run initial broad tBLASTn search
 
 `python blast_run.py --path </path/to/genome/assemblies/> `
