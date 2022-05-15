@@ -1,6 +1,7 @@
 import os
 import glob
 import json
+import shutil
 import argparse
 from Bio import Align, SeqIO
 from collections import defaultdict
@@ -17,17 +18,24 @@ parse.add_argument("--gene",type=str, help="name of homeobox gene to parse",requ
 
 args = parse.parse_args()
 
-intron_list = ['Pb', 'Ro']
+intron_list = ['Pb', 'Ro', 'Abd-B', 'lab']
+#intron_list = ['Msx', 'NK1', 'NK4', 'NK6', 'Emx']
+
+##Check if blast is installed localy
+if shutil.which('sixpack') is None:
+    sys.exit('sixpack not installed locally')
+else:
+    continue
 
 ##Open dictionary of Homeodomain classes and their genes
-with open('../../../raw/hbx_data/hbx_naming.json') as f:
+with open('../../../hbx_data/hbx_naming.json') as f:
     hbx_naming_dict = json.load(f)
 
 hbx_dict = hbx_naming_dict[args.gene]
 
 ##Create dictionary of hbx gene IDs and AA sequences
 hbx_gene_seq_dict = {}
-with open('../../../raw/hbx_data/family_data/' + args.gene + '.fasta') as f:
+with open('../../../hbx_data/family_data/' + args.gene + '.fasta') as f:
     for record in SeqIO.parse(f, 'fasta'):
         header = record.description
         gene = header.split('|')[1].strip()
@@ -40,13 +48,21 @@ genome_hbx_seqs = defaultdict(list)
 with open('../recip_blast/genome_' + args.gene + '_recipBlast.fasta') as f:
     for record in SeqIO.parse(f, 'fasta'):
         header = record.description
+        sp = header.split('|')[0]
+        gene = header.split('|')[1]
+        geneName = hbx_dict[gene]
+        contig = header.split('|')[2]
+        gene_start = header.split('|')[3]
+        gene_end = header.split('|')[4]
         seq = str(record.seq)
+        header = sp + '|' + geneName + '|' + contig + '|' + gene_start + '|' + gene_end + '|'
         genome_hbx_seqs[header].append(seq)
         
 ##Parse cluster file and output nucleotide sequences
+count=0
 gene_nuc_data = {}
-os.mkdir('temp_seqs')
-with open('../../hbx_clusters/' + args.gene + '_cluster_filtered.txt') as f, open(args.gene + '_HD_nuc.fasta', 'w') as outF:
+os.mkdir('temp_seqs/' + args.gene)
+with open('../recip_blast/hbx_clusters/' + args.gene + '_cluster.txt') as f, open(args.gene + '_HD_nuc.fasta', 'w') as outF:
     lines = f.read()
     sp_homeobox = lines.split('>')
     for cluster in sp_homeobox:
@@ -54,7 +70,7 @@ with open('../../hbx_clusters/' + args.gene + '_cluster_filtered.txt') as f, ope
             continue
         else:
             genes = cluster.split('\n')
-            spName = genes[0]
+            spName = genes[0].split('_i')[0]
             for gene in genes[1:]:
                 if not gene:
                     continue
@@ -69,29 +85,34 @@ with open('../../hbx_clusters/' + args.gene + '_cluster_filtered.txt') as f, ope
                     
                     #Get the nucleotide sequence for the gene from the recip blast fasta file
                     gene_header_search = spName + '|' + geneName + '|' + contig + '|' + gene_start + '|' + gene_end + '|'
+                    #print(gene_header_search)
                     gene_nuc_seq = genome_hbx_seqs[gene_header_search]
-
+                    #print(gene_nuc_seq)
                     gene_header = spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end
-                    outF.write('>' + gene_header + '\n' + gene_nuc_seq[0] + '\n')
-
+                    try:
+                        outF.write('>' + gene_header + '\n' + gene_nuc_seq[0] + '\n')
+                    except:
+                        #print(gene_header)
+                        count+=1
+                        continue
                     if '_' in contig:
                         contig = contig.split('_')[0]
                     
                     if geneName in intron_list:
                         if len(set(gene_nuc_seq)) > 1:
-                            with open('temp_seqs/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.1.fasta', 'w') as outF1:
+                            with open('temp_seqs/' + args.gene + '/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.1.fasta', 'w') as outF1:
                                 outF1.write('>' + gene_header + '\n' + gene_nuc_seq[0] + '\n')
-                            with open('temp_seqs/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.2.fasta', 'w') as outF2:
+                            with open('temp_seqs/' + args.gene + '/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.2.fasta', 'w') as outF2:
                                 outF2.write('>' + gene_header + '\n' + gene_nuc_seq[1] + '\n')
                         else:
-                            with open('temp_seqs/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.fasta', 'w') as outF1:
+                            with open('temp_seqs/' + args.gene + '/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.fasta', 'w') as outF1:
                                 outF1.write('>' + gene_header + '\n' + gene_nuc_seq[0] + '\n')
                     else:
-                        with open('temp_seqs/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.fasta', 'w') as outF3:
+                        with open('temp_seqs/' + args.gene + '/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.fasta', 'w') as outF3:
                             outF3.write('>' + gene_header + '\n' + gene_nuc_seq[0] + '\n')
-
+#print(count, 'genes with naming err')
 ##Translate nucleotide hbx sequences
-os.chdir('temp_seqs')
+os.chdir('temp_seqs/' + args.gene)
 for fasta in glob.glob("*.fasta"):
     unix('sixpack -sequence ' + fasta + ' -outfile ' + fasta + '.sixpack -outseq ' + fasta + '.sixpack.fa', shell=True)
 
@@ -102,13 +123,14 @@ for fa in glob.glob("*fa"):
 sorted_fasta = sorted(sorted_fasta)
 
 for fa in sorted_fasta:
-    fa_info = fa.split('.')[0]
+    fa_info = fa.split('.fasta')[0]
     if len(fa_info.split('_')) == 6:
         spName = '_'.join(fa_info.split('_')[:1])
         geneID = fa_info.split('_')[2]
         contig = fa_info.split('_')[3]
         pos = '_'.join(fa_info.split('_')[4:5])
     else:
+        #print(fa)
         spName = '_'.join(fa_info.split('_')[:1])
         geneID = fa_info.split('_')[3]
         contig = fa_info.split('_')[4]
@@ -134,7 +156,7 @@ for fa in sorted_fasta:
             else:
                 outF.write('>' + fa_info + '\n' + gene_seq[:-1] + '\n')
                 
-unix('mv ' + args.gene + '_HD_AA.fasta ../', shell=True)
-os.chdir('../')
+unix('mv ' + args.gene + '_HD_AA.fasta ../../', shell=True)
+os.chdir('../../')
 
 
