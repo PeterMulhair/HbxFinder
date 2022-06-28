@@ -14,6 +14,7 @@ import os
 parse = argparse.ArgumentParser()
 
 parse.add_argument("--path",type=str, help="path to genomes in fasta format",required=True)
+parse.add_argument("--group",type=str, help="group of animals to use as seed search i.e. vertebrate or invertebrate",required=True)
 
 args = parse.parse_args()
 
@@ -40,7 +41,7 @@ def hbx_blast(fasta):
         #Make blast database from genome fasta files
         unix('makeblastdb -dbtype nucl -in ' + fasta + ' -out genome_blastdb/' + sp_name, shell=True)
         #Search for hbx genes in unannotated genomes
-        unix('tblastn -query ../../hbx_data/homeobox.fasta -db genome_blastdb/' + sp_name + ' -evalue 1 -seg yes -max_target_seqs 5000 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + sp_name + '.blastoutput.tsv', shell=True)
+        unix('tblastn -query ../../hbx_data/' + args.group + '_data/homeobox.fasta -db genome_blastdb/' + sp_name + ' -evalue 1 -seg yes -max_target_seqs 5000 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + sp_name + '.blastoutput.tsv', shell=True)
 
 if len(db_list) >= 1:        
         Parallel(n_jobs=45)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)

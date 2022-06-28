@@ -11,13 +11,14 @@ parse = argparse.ArgumentParser()
 
 parse.add_argument("--infile",type=str, help="input file to run reciprocal BLAST on",required=True)
 parse.add_argument("--outfile",type=str, help="output file name from reciprocal BLAST run",required=True)
+parse.add_argument("--group",type=str, help="group of animals to use as seed search i.e. vertebrate or invertebrate",required=True)
 
 args = parse.parse_args()
 
 
 #Run reciprocal blast
 print('Running reciprocal BLASTx search...')
-unix('blastx -query ' + args.infile + ' -db ../../../hbx_data/homeobox -evalue 1e-5 -num_threads 4 -seg yes -max_target_seqs 1 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + args.outfile, shell=True)
+unix('blastx -query ' + args.infile + ' -db ../../../hbx_data/' + args.group + '_data/homeobox -evalue 1e-5 -num_threads 4 -seg yes -max_target_seqs 1 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + args.outfile, shell=True)
 
 
 #Parse reciprocal BLASTx output
