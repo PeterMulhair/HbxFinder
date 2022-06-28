@@ -54,9 +54,9 @@ else:
 print('\n')
 print('Parsing BLAST output...')
 assemb_sp = {}
-for blast_out in sp_name_list:
+for blast_out in db_list:
         blast_output = blast_out + '.blastoutput.tsv'
-        sp = blast_out.split('.')[0]
+        sp = blast_out.split('/')[-1].split('.f')[0]
         sp_assem = blast_out.split('.blastout')[0]
         assemb_sp[sp_assem] = sp
         
@@ -65,16 +65,15 @@ outF = open('recip_blast/blast_parsed_output.fasta', 'w')
 for assemb, sp in assemb_sp.items():
         contig_nuc_assem = {}
                 
-        sp_assem = assemb + '.fasta'
-        with open(args.path + sp_assem) as f:
+        with open(assemb) as f:
                 for record in SeqIO.parse(f, 'fasta'):
                         contig = record.id
                         seq = str(record.seq)
                         contig_nuc_assem[contig] = seq
                                 
                                 
-        print(assemb)
-        sp_blast = assemb + '.blastoutput.tsv'
+        print(sp)
+        sp_blast = assemb.split('/')[-1] + '.blastoutput.tsv'
         with open(sp_blast) as f:
                 for line in f:
                         lines = line.split('\t')
@@ -86,9 +85,6 @@ for assemb, sp in assemb_sp.items():
                         perc_ident = lines[3]
                         qstart = lines[5]
                         qend = lines[6]
-                        #sstart = int(lines[8])
-                        #send = int(lines[9])
-                        #subject_range = (sstart, send)
                         
                         blast_hit = []
                         if int(lines[8]) < int(lines[9]):
@@ -113,6 +109,6 @@ for assemb, sp in assemb_sp.items():
                                                 continue
                         blast_hit = ''.join(blast_hit)
                         
-                        outF.write('>' + assemb + '|' + hbx_gene +  '|' + scaff + '|' + str(sstart + 10) + '|' + str(send - 10) + '|' + orientation + '\n' + blast_hit + '\n')
+                        outF.write('>' + sp + '|' + hbx_gene +  '|' + scaff + '|' + str(sstart + 10) + '|' + str(send - 10) + '|' + orientation + '\n' + blast_hit + '\n')
                         
 outF.close()
