@@ -16,6 +16,7 @@ parse = argparse.ArgumentParser()
 
 parse.add_argument("--gene",type=str, help="name of homeobox gene to obtain results for",required=True)
 parse.add_argument("--path",type=str, help="path to genomes in fasta format",required=True)
+parse.add_argument("--group",type=str, help="group of animals to use as seed search i.e. vertebrate or invertebrate",required=True)
 
 args = parse.parse_args()
 
@@ -100,7 +101,7 @@ def second_blast(fasta):
     #Search for hbx genes with mmseq easy-search
     print('\n')
     print('Running MMseqs;',sp_assem)
-    unix('mmseqs easy-search ../../hbx_data/family_data/' + args.gene + '.fasta ' + fasta + ' hbx_mmseqoutput/' + sp_assem + '_' + args.gene + '.m8 tmp --spaced-kmer-pattern 1101111 -k 6 -a -e 1 --num-iterations 2', shell=True)
+    unix('mmseqs easy-search ../../hbx_data/' + args.group + '_data/family_data/' + args.gene + '.fasta ' + fasta + ' hbx_mmseqoutput/' + sp_assem + '_' + args.gene + '.m8 tmp --spaced-kmer-pattern 1101111 -k 6 -a -e 1 --num-iterations 2', shell=True)
     mmseq_outfile.append(sp_assem + '_' + args.gene + '.m8')
 
 
