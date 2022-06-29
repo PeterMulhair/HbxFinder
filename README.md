@@ -68,6 +68,8 @@ $ python summarise_Hbx.py --taxa species_hbx/<species reciprocal blastoutput fil
 
 ```
 
+The final output files are found in `hbx_clusters/`
+
 ### Step 3: Get sequence data for homeobox genes
 
 The last step outputs fasta files of the nucleotide and amino acid sequences for the homeodomain of each homeobox gene class.
