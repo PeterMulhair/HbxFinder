@@ -32,7 +32,7 @@ with open('recipBlast_' + args.gene + '.fa') as f:
 os.makedirs('species_hbx', exist_ok=True)
 for species in sp_list:
     print(species)
-    with open('recipBlast_' + args.gene + '.fa') as f, open('species_hbx/' + species + '_' + args.gene + '.fasta', 'w') as outF:
+    with open('recipBlast_' + args.gene + '.fa') as f, open('species_hbx/' + species + '_' + args.gene + '.tsv', 'w') as outF:
         for line in f:
             line = line.strip()
             sp = line.split('|')[0]
