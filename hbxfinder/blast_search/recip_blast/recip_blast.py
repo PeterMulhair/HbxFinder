@@ -35,7 +35,7 @@ with open(args.outfile) as f:
 
 for assemb, species in sp_assem_list.items():
     print(species)
-    with open(args.outfile) as f, open(assemb + '_hbx.fasta', 'w') as outF:
+    with open(args.outfile) as f, open(assemb + '_hbx.tsv', 'w') as outF:
         for line in f:
             line = line.strip()
             sp = line.split('.')[0]
