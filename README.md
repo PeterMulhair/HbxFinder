@@ -17,6 +17,8 @@ To run, download this repo locally using `git clone https://github.com/PeterMulh
 
 ### Step 1: Run initial broad tBLASTn search
 
+#### 1.1
+
 `python blast_run.py --path </path/to/genome/assemblies/> --group <group of organisms to search>` (`--group` is given as either `invertebrate` or `vertebrate` depending on what group of animals you are searching)
 
 - Required:
@@ -24,6 +26,7 @@ To run, download this repo locally using `git clone https://github.com/PeterMulh
   - **`genomes`** Path to a folder containing the raw genome assemblies you wish to search. It is preferred if you provide the full path name to where genomes are stored.
 - Output: Blast output files in output format 6. The most important file for the next step is present at `recip_blast/blast_parsed_output.fasta`
 
+#### 1.2
 
 Following the initial tBLASTn search, a reciprocal BLASTx search (to identify the hbx gene) is carried out followed by a parsing script (which orders the non-overlapping hbx genes) by running:
 
@@ -40,6 +43,8 @@ This produces an output file for each homeobox gene class (in the output dir `hb
 
 ### Step 2: Run	second more sensitive sequence similarity search with MMseqs
 
+#### 2.1
+
 The second similarity search uses MMseqs to carry out a more sensitive search of the regions of the genome containing homeobox genes. You must specify a particular class of homeobox gene you wish to annotated e.g. HOX.
 
 `python data_blast.py --gene <specify class of hbx gene> --path </path/to/genome/assemblies/> --group <invertebrate or vertebrate>`
@@ -50,6 +55,7 @@ The second similarity search uses MMseqs to carry out a more sensitive search of
   - **`genomes`** Path to raw genome assemblies you wish to search. Again, it is preferred if you provide the full path name to where genomes are stored.
   - **`gene`** Name of homeobox gene class you wish to search for eg. HOX
 
+#### 2.2
 
 This is followed again by a reciprocal BLAST script along with a parsing script.
 
