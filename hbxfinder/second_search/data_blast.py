@@ -6,6 +6,7 @@ from collections import defaultdict
 from Bio import SeqIO
 from joblib import Parallel, delayed
 from subprocess import call as unix
+import shutil
 import os
 
 # Author: Peter Mulhair
@@ -19,6 +20,9 @@ parse.add_argument("--path",type=str, help="path to genomes in fasta format",req
 parse.add_argument("--group",type=str, help="group of animals to use as seed search i.e. vertebrate or invertebrate",required=True)
 
 args = parse.parse_args()
+
+if shutil.which('mmseqs') is None:
+    sys.exit('Error; MMseqs not installed locally')
 
 finished_genome = []
 for blastparse in glob.glob('genome_hbx/' + args.gene + '/*fasta'):
