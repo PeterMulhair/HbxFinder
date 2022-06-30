@@ -15,6 +15,7 @@ aligner = Align.PairwiseAligner()
 parse = argparse.ArgumentParser()
 
 parse.add_argument("--gene",type=str, help="name of homeobox gene to parse",required=True)
+parse.add_argument("--group",type=str, help="group of animals to use as seed search i.e. vertebrate or invertebrate",required=True)
 
 args = parse.parse_args()
 
@@ -28,14 +29,14 @@ else:
     continue
 
 ##Open dictionary of Homeodomain classes and their genes
-with open('../../../hbx_data/hbx_naming.json') as f:
+with open('../../../hbx_data/' + args.group + '_data/hbx_naming.json') as f:
     hbx_naming_dict = json.load(f)
 
 hbx_dict = hbx_naming_dict[args.gene]
 
 ##Create dictionary of hbx gene IDs and AA sequences
 hbx_gene_seq_dict = {}
-with open('../../../hbx_data/family_data/' + args.gene + '.fasta') as f:
+with open('../../../hbx_data/' + args.group + '_data/family_data/' + args.gene + '.fasta') as f:
     for record in SeqIO.parse(f, 'fasta'):
         header = record.description
         gene = header.split('|')[1].strip()
