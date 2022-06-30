@@ -23,6 +23,8 @@ args = parse.parse_args()
 
 if shutil.which('mmseqs') is None:
     sys.exit('Error; MMseqs not installed locally')
+else:
+    continue
 
 finished_genome = []
 for blastparse in glob.glob('genome_hbx/' + args.gene + '/*fasta'):
