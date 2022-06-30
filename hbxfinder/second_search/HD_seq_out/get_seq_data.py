@@ -62,6 +62,7 @@ with open('../recip_blast/genome_' + args.gene + '_recipBlast.fasta') as f:
 ##Parse cluster file and output nucleotide sequences
 count=0
 gene_nuc_data = {}
+os.mkdir('temp_seqs/')
 os.mkdir('temp_seqs/' + args.gene)
 with open('../recip_blast/hbx_clusters/' + args.gene + '_cluster.txt') as f, open(args.gene + '_HD_nuc.fasta', 'w') as outF:
     lines = f.read()
@@ -78,8 +79,10 @@ with open('../recip_blast/hbx_clusters/' + args.gene + '_cluster.txt') as f, ope
                 else:
                     gene_info = gene.split('\t')
                     contig = gene_info[0]
-                    gene_start = gene_info[1].split(',')[0].strip('(')
-                    gene_end = gene_info[1].split(', ')[1].strip(')')
+                    #gene_start = gene_info[1].split(',')[0].strip('(')
+                    #gene_end = gene_info[1].split(', ')[1].strip(')')
+                    gene_start = gene_info[1]
+                    gene_end = gene_info[2]
                     gene_end = int(gene_end) + 1
                     gene_end = str(gene_end)
                     geneName = gene_info[2]
