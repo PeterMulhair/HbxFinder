@@ -22,7 +22,7 @@ args = parse.parse_args()
 intron_list = ['Pb', 'Ro', 'Abd-B', 'lab']
 #intron_list = ['Msx', 'NK1', 'NK4', 'NK6', 'Emx']
 
-##Check if blast is installed localy
+##Check if sixpack is installed localy
 if shutil.which('sixpack') is None:
     sys.exit('sixpack not installed locally')
 else:
@@ -62,7 +62,7 @@ with open('../recip_blast/genome_' + args.gene + '_recipBlast.fasta') as f:
 ##Parse cluster file and output nucleotide sequences
 count=0
 gene_nuc_data = {}
-os.mkdir('temp_seqs/')
+os.makedirs('temp_seqs', exist_ok=True)
 os.mkdir('temp_seqs/' + args.gene)
 with open('../recip_blast/hbx_clusters/' + args.gene + '_cluster.txt') as f, open(args.gene + '_HD_nuc.fasta', 'w') as outF:
     lines = f.read()
@@ -85,7 +85,7 @@ with open('../recip_blast/hbx_clusters/' + args.gene + '_cluster.txt') as f, ope
                     gene_end = gene_info[2]
                     gene_end = int(gene_end) + 1
                     gene_end = str(gene_end)
-                    geneName = gene_info[2]
+                    geneName = gene_info[3]
                     
                     #Get the nucleotide sequence for the gene from the recip blast fasta file
                     gene_header_search = spName + '|' + geneName + '|' + contig + '|' + gene_start + '|' + gene_end + '|'
@@ -114,6 +114,7 @@ with open('../recip_blast/hbx_clusters/' + args.gene + '_cluster.txt') as f, ope
                     else:
                         with open('temp_seqs/' + args.gene + '/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.fasta', 'w') as outF3:
                             outF3.write('>' + gene_header + '\n' + gene_nuc_seq[0] + '\n')
+
 #print(count, 'genes with naming err')
 ##Translate nucleotide hbx sequences
 os.chdir('temp_seqs/' + args.gene)
@@ -134,7 +135,6 @@ for fa in sorted_fasta:
         contig = fa_info.split('_')[3]
         pos = '_'.join(fa_info.split('_')[4:5])
     else:
-        #print(fa)
         spName = '_'.join(fa_info.split('_')[:1])
         geneID = fa_info.split('_')[3]
         contig = fa_info.split('_')[4]
