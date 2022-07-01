@@ -78,7 +78,7 @@ The last step outputs fasta files of the nucleotide and amino acid sequences for
 
 
 - Required:
-  - **`directory`** First change dir with `cd HbxFinder/hbxfinder/HD_AA_sequences/`
+  - **`directory`** First change dir with `cd HbxFinder/hbxfinder/second_search/HD_seq_out`
   - **`gene`** Name of homeobox gene class you wish to parse eg. HOX
 
 
