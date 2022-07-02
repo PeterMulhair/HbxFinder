@@ -43,7 +43,6 @@ $ cd recip_blast/
 $ python recip_blast.py --infile <output from blast script i.e. blast_parsed_output.fasta> --outfile <output file name> --group <group of organisms to search i.e. invertebrate or vertebrate>
 
 $ python summarise_Hbx.py --taxa <reciprocal blastoutput file i.e. file ending in *_hbx.tsv> --gene <specify class of hbx gene> --group <invertebrate or vertebrate>
-
 ```
 
 This produces an output file for each homeobox gene class (in the output dir `hbx_contigs`) which is parsed in Step 2.
@@ -72,7 +71,6 @@ $ cd recip_blast/
 $ python recip_blast.py --gene <specify class of hbx gene> --group <invertebrate or vertebrate>
 
 $ python summarise_Hbx.py --taxa species_hbx/<species reciprocal blastoutput file> --gene <specify class of hbx gene> --path <path to genome file> --group <invertebrate or vertebrate>
-
 ```
 
 The final output files are found in `hbx_clusters/`
