@@ -69,7 +69,7 @@ hbx_gene_dict = hbx_naming_dict[args.gene]
 
 os.makedirs('hbx_clusters', exist_ok=True)
 outF = open('hbx_clusters/' + args.gene + '_cluster.txt', 'a+')
-outF.write('>' + sp_name + '\n')
+outF.write('>' + sp_name.split('_blast')[0] + '\n')
 for contig, seq_range_list in contig_seq_ranges.items():
 
     seq_ranges_dict = defaultdict(list)
