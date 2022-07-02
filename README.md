@@ -73,7 +73,9 @@ $ python recip_blast.py --gene <specify class of hbx gene> --group <invertebrate
 $ python summarise_Hbx.py --taxa species_hbx/<species reciprocal blastoutput file> --gene <specify class of hbx gene> --path <path to genome file> --group <invertebrate or vertebrate>
 ```
 
-The final output files are found in `hbx_clusters/`
+The final output files are found in `HbxFinder/hbxfinder/second_search/recip_blast/hbx_clusters/`
+
+---
 
 ### Step 3: Get sequence data for homeobox genes
 
