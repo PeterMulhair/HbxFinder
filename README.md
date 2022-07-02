@@ -1,5 +1,3 @@
-# HbxFinder
-
 <div align="center">
 <p align="center">
 <img src="https://github.com/PeterMulhair/HbxFinder/blob/master/hbxfinder_logo.png" width="500" height="150">
