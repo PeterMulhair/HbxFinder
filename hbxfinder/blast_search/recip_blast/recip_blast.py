@@ -18,7 +18,7 @@ args = parse.parse_args()
 
 #Run reciprocal blast
 print('Running reciprocal BLASTx search...')
-unix('blastx -query ' + args.infile + ' -db ../../../hbx_data/' + args.group + '_data/homeobox -evalue 1e-5 -num_threads 4 -seg yes -max_target_seqs 1 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + args.outfile, shell=True)
+unix('blastx -query ' + args.infile + ' -db ../../../data_hbx/' + args.group + '_data/homeobox -evalue 1e-5 -num_threads 4 -seg yes -max_target_seqs 1 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + args.outfile, shell=True)
 
 
 #Parse reciprocal BLASTx output
