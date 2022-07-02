@@ -45,6 +45,7 @@ def genome_data(cluster):
                 contig_gene_region = defaultdict(list)
                 sp_info = sp.split('\n')
                 sp_name = sp_info[0]
+                sp_name = sp_name.split('.')[0]
                 for line in sp_info[1:]:
                     if not line:
                         continue
