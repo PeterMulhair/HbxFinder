@@ -8,6 +8,7 @@ HbxFinder is a pipeline for identification and characterisation of homeobox gene
 * python3
 * BLAST+ suite - [install for command line](https://www.ncbi.nlm.nih.gov/books/NBK279671/)
 * MMseqs - [install](https://github.com/soedinglab/MMseqs2#installation)
+* Emboss sixpack
 
 ## Usage
 
