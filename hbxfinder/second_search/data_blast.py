@@ -21,10 +21,9 @@ parse.add_argument("--group",type=str, help="group of animals to use as seed sea
 
 args = parse.parse_args()
 
+#Check MMseqs is installed
 if shutil.which('mmseqs') is None:
-    sys.exit('Error; MMseqs not installed locally')
-else:
-    continue
+    sys.exit('ERROR: MMseqs not installed locally')
 
 finished_genome = []
 for blastparse in glob.glob('genome_hbx/' + args.gene + '/*fasta'):
