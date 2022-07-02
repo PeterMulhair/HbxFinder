@@ -1,4 +1,5 @@
 import os
+import sys
 import glob
 import json
 import shutil
@@ -9,7 +10,7 @@ from subprocess import call as unix
 
 # Author: Peter Mulhair
 # Date: 09/02/2020
-# Usage python3 get_seq_data.py --gene <homeobox gene to search for>
+# Usage python3 get_seq_data.py --gene <homeobox gene to search for> --group <name of animal group to search>
 
 aligner = Align.PairwiseAligner()
 parse = argparse.ArgumentParser()
@@ -24,9 +25,7 @@ intron_list = ['Pb', 'Ro', 'Abd-B', 'lab']
 
 ##Check if sixpack is installed localy
 if shutil.which('sixpack') is None:
-    sys.exit('sixpack not installed locally')
-else:
-    continue
+    sys.exit('ERROR: sixpack not installed locally')
 
 ##Open dictionary of Homeodomain classes and their genes
 with open('../../../hbx_data/' + args.group + '_data/hbx_naming.json') as f:
