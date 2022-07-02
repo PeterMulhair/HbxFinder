@@ -40,7 +40,7 @@ Following the initial tBLASTn search, a reciprocal BLASTx search (to identify th
 ```
 $ cd recip_blast/
 
-$ python recip_blast.py --infile <output from blast script i.e. blast_parsed_output.fasta> --outfile <output file name> --group <group of organisms to search i.e. invertebrate or vertebrate>
+$ python recip_blast.py --group <group of organisms to search i.e. invertebrate or vertebrate>
 
 $ python summarise_Hbx.py --taxa <reciprocal blastoutput file i.e. file ending in *_hbx.tsv> --gene <specify class of hbx gene> --group <invertebrate or vertebrate>
 ```
