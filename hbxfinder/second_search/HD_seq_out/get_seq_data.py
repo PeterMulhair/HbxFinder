@@ -28,14 +28,14 @@ if shutil.which('sixpack') is None:
     sys.exit('ERROR: sixpack not installed locally')
 
 ##Open dictionary of Homeodomain classes and their genes
-with open('../../../hbx_data/' + args.group + '_data/hbx_naming.json') as f:
+with open('../../../data_hbx/' + args.group + '_data/hbx_naming.json') as f:
     hbx_naming_dict = json.load(f)
 
 hbx_dict = hbx_naming_dict[args.gene]
 
 ##Create dictionary of hbx gene IDs and AA sequences
 hbx_gene_seq_dict = {}
-with open('../../../hbx_data/' + args.group + '_data/family_data/' + args.gene + '.fasta') as f:
+with open('../../../data_hbx/' + args.group + '_data/family_data/' + args.gene + '.fasta') as f:
     for record in SeqIO.parse(f, 'fasta'):
         header = record.description
         gene = header.split('|')[1].strip()
