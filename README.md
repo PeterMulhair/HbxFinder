@@ -51,7 +51,7 @@ This produces an output file for each homeobox gene class (in the output dir `hb
 
 #### 2.1
 
-The second similarity search uses MMseqs to carry out a more sensitive search of the regions of the genome containing homeobox genes. You must specify a particular class of homeobox gene you wish to annotated e.g. HOX.
+The second similarity search uses MMseqs to carry out a more sensitive search of the regions of the genome containing homeobox genes. You must specify a particular class of homeobox gene you wish to annotated e.g. one of `HOX, NK, PRD, LIM, POU, SINE, TALE, CUT, PROS, ZF, CERS, Other`
 
 `python data_blast.py --gene <specify class of hbx gene> --path </path/to/genome/assemblies/> --group <invertebrate or vertebrate>`
 
