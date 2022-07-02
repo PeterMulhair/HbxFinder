@@ -1,5 +1,5 @@
-<div align="center">
-<p align="center">
+<div align="left">
+<p align="left">
 <img src="https://github.com/PeterMulhair/HbxFinder/blob/master/hbxfinder_logo.png" width="500" height="150">
 </p>
 </div>
