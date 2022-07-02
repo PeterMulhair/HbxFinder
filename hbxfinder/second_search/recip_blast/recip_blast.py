@@ -16,7 +16,7 @@ args = parse.parse_args()
 
 #Run reciprocal blast
 print('Running reciprocal BLASTx search...')
-unix('blastx -query genome_' + args.gene + '_recipBlast.fasta -db ../../../hbx_data/' + args.group + '_data/family_data/' + args.gene + ' -evalue 1e-5 -num_threads 5 -seg yes -max_target_seqs 1 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out recipBlast_' + args.gene + '.fa', shell=True)
+unix('blastx -query genome_' + args.gene + '_recipBlast.fasta -db ../../../data_hbx/' + args.group + '_data/family_data/' + args.gene + ' -evalue 1e-5 -num_threads 5 -seg yes -max_target_seqs 1 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out recipBlast_' + args.gene + '.fa', shell=True)
 
 
 #Parse reciprocal BLASTx output

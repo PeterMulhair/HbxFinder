@@ -25,7 +25,7 @@ sp_name = sp_file.split('_' + args.gene)[0]
 print('Parsing', sp_name, args.gene, 'gene content...')
 
 ##Open dictionary of Homeodomain classes and their genes
-with open('../../../hbx_data/' + args.group + '_data/hbx_naming.json') as f:
+with open('../../../data_hbx/' + args.group + '_data/hbx_naming.json') as f:
     hbx_naming_dict = json.load(f)
 
 
