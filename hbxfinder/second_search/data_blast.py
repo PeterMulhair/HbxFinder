@@ -63,31 +63,33 @@ def genome_data(cluster):
                             gene_len = int(gene_pos2), int(gene_pos1)
                             gene_orientation[gene_len] = 'L'
                         contig_gene_region[contig].append(gene_len)
-                        
-                sp_genome = glob.glob(args.path + sp_name + '*')
-                sp_genome = sp_genome[0]
-                with open(sp_genome) as fg, open('genome_hbx/' + args.gene + '/' + sp_name + '_blastRegion.fasta', 'w') as outF:
-                    for record in SeqIO.parse(fg, 'fasta'):
-                        contigID = record.id
-                        seq = str(record.seq)
-                        
-                        if contigID in contig_gene_region:
-                            blast_hit = []
-                            reg = contig_gene_region[contigID]
-                            
-                            for gene in reg:
+
+                if sp_name not in finished_genome:
+                    print(sp_name)
+                    sp_genome = glob.glob(args.path + sp_name + '*')
+                    sp_genome = sp_genome[0]
+                    with open(sp_genome) as fg, open('genome_hbx/' + args.gene + '/' + sp_name + '_blastRegion.fasta', 'w') as outF:
+                        for record in SeqIO.parse(fg, 'fasta'):
+                            contigID = record.id
+                            seq = str(record.seq)
+
+                            if contigID in contig_gene_region:
                                 blast_hit = []
-                                gene_start = gene[0] - 1000
-                                gene_end = gene[1] + 1000
-                                gene_range = range(gene_start, gene_end + 1)
-                                for i in gene_range:
-                                    try:
-                                        nuc = seq[i]
-                                        blast_hit.append(nuc)
-                                    except:
-                                        continue
-                                blast_hit = ''.join(blast_hit)
-                                outF.write('>' + contigID + '|' + str(gene_start) + '|' + str(gene_end) + '\n' + blast_hit + '\n')
+                                reg = contig_gene_region[contigID]
+
+                                for gene in reg:
+                                    blast_hit = []
+                                    gene_start = gene[0] - 1000
+                                    gene_end = gene[1] + 1000
+                                    gene_range = range(gene_start, gene_end + 1)
+                                    for i in gene_range:
+                                        try:
+                                            nuc = seq[i]
+                                            blast_hit.append(nuc)
+                                        except:
+                                            continue
+                                    blast_hit = ''.join(blast_hit)
+                                    outF.write('>' + contigID + '|' + str(gene_start) + '|' + str(gene_end) + '\n' + blast_hit + '\n')
 
 
 genome_data(args.gene)
