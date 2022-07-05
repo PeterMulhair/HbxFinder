@@ -20,14 +20,14 @@ args = parse.parse_args()
 
 finished_genome = []
 for blastout in glob.glob("*blastoutput.tsv"):
-        genome = blastout.split('.blast')[0]
+        genome = blastout.split('.')[0]
         finished_genome.append(genome)
 
 db_list = []
 sp_name_list = []
 for fasta in glob.glob(args.path + "*"):
         if fasta.endswith(('.fa', '.fasta', '.fas', '.fna')):
-                sp_fasta = fasta.split('/')[-1].split('.f')[0]
+                sp_fasta = fasta.split('/')[-1].split('.')[0]
                 if sp_fasta not in finished_genome:
                         sp_name_list.append(sp_fasta)
                         db_list.append(fasta)
