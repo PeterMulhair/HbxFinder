@@ -19,7 +19,7 @@ parse.add_argument("--group",type=str, help="group of animals to use as seed sea
 args = parse.parse_args()
 
 finished_genome = []
-for blastout in glob.glob("*blastoutput.fa"):
+for blastout in glob.glob("*blastoutput.tsv"):
         genome = blastout.split('.blast')[0]
         finished_genome.append(genome)
 
