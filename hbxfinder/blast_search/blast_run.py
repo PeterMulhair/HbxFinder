@@ -18,6 +18,9 @@ parse.add_argument("--group",type=str, help="group of animals to use as seed sea
 
 args = parse.parse_args()
 
+args.path = os.path.abspath(args.path)
+args.path = args.path + '/'
+
 finished_genome = []
 for blastout in glob.glob("*blastoutput.tsv"):
         genome = blastout.split('.')[0]
