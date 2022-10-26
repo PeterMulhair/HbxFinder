@@ -19,7 +19,9 @@ parse.add_argument("--group",type=str, help="group of animals to use as seed sea
 
 args = parse.parse_args()
 
-    
+args.path = os.path.abspath(args.path)
+args.path = args.path + '/'
+
 sp_file = args.taxa.split('/')[-1]
 sp_name = sp_file.split('_' + args.gene)[0]
 print('Parsing', sp_name, args.gene, 'gene content...')
@@ -33,9 +35,11 @@ with open('../../../data_hbx/' + args.group + '_data/hbx_naming.json') as f:
 seq_ranges = []
 seq_range_perc_ident = defaultdict(list)
 seq_range_sub_gene = {}
+seq_range_orientation = {}
 contig_seq_ranges = defaultdict(list)
 contig_seq_range_sub_gene = defaultdict(dict)
 contig_seq_range_perc_ident = defaultdict(dict)
+contig_seq_range_orientation = defaultdict(dict)
 with open(args.taxa) as f:
     for line in f:
         lines = line.split('\t')
@@ -46,6 +50,7 @@ with open(args.taxa) as f:
 
         query_info = query.split('|')
         contig = query_info[1]
+        orientation = query_info[-1]
         
         if int(query_info[2]) < int(query_info[3]):
             seq_start = int(query_info[2])
@@ -59,10 +64,11 @@ with open(args.taxa) as f:
         contig_seq_ranges[contig].append(seq_range)
         seq_range_sub_gene[seq_range] = subject_gene
         seq_range_perc_ident[seq_range] = perc_ident
+        seq_range_orientation[seq_range] = orientation
         
         contig_seq_range_sub_gene[contig] = seq_range_sub_gene
         contig_seq_range_perc_ident[contig] = seq_range_perc_ident
-
+        contig_seq_range_orientation[contig] = seq_range_orientation
 
 ##Remove overlapping hits for each hbx in the class by retaining largest hit - write gene locations to file
 hbx_gene_dict = hbx_naming_dict[args.gene]
@@ -110,6 +116,7 @@ for contig, seq_range_list in contig_seq_ranges.items():
     for ranges in sorted(subset_gene_list, key=lambda r: r.start):
         range_genes = contig_seq_range_sub_gene[contig]
         range_perc = contig_seq_range_perc_ident[contig]
+        range_orientation = contig_seq_range_orientation[contig]
         range_gene = range_genes[ranges]
 
         if range_genes[ranges] in hbx_gene_dict:
@@ -118,7 +125,7 @@ for contig, seq_range_list in contig_seq_ranges.items():
             gene_start = ranges[0]
             gene_end = ranges[-1]
             gene_positions = gene_start, gene_end
-            outF.write(contig + '\t' + str(gene_start) + '\t' + str(gene_end) + '\t' + hbx_geneID + '\t' + str(range_perc[ranges]) + '\n')
+            outF.write(contig + '\t' + str(gene_start) + '\t' + str(gene_end) + '\t' + hbx_geneID + '\t' + range_orientation[ranges] + '\t' + str(range_perc[ranges]) + '\n')
         
         
 outF.close()
