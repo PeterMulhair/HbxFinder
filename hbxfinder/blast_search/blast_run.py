@@ -80,10 +80,11 @@ for assemb, sp in assemb_sp.items():
                                 
                                 
         print(sp)
-        try:
+        if os.path.isfile(assemb.split('/')[-1] + '.blastoutput.tsv'):
                 sp_blast = assemb.split('/')[-1] + '.blastoutput.tsv'
-        except:
+        else:
                 sp_blast = assemb.split('/')[-1].split('.f')[0] + '.blastoutput.tsv'
+
         with open(sp_blast) as f:
                 for line in f:
                         lines = line.split('\t')
