@@ -76,7 +76,10 @@ for assemb, sp in assemb_sp.items():
                                 
                                 
         print(sp)
-        sp_blast = assemb.split('/')[-1] + '.blastoutput.tsv'
+        try:
+                sp_blast = assemb.split('/')[-1] + '.blastoutput.tsv'
+        except:
+                sp_blast = assemb.split('/')[-1].split('.f')[0] + '.blastoutput.tsv'
         with open(sp_blast) as f:
                 for line in f:
                         lines = line.split('\t')
