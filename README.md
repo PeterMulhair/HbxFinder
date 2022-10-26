@@ -1,6 +1,6 @@
 <div align="left">
 <p align="left">
-<img src="https://github.com/PeterMulhair/HbxFinder/blob/master/hbxfinder_logo.png" width="500" height="150">
+<img src="https://github.com/PeterMulhair/HbxFinder/blob/master/logo.png" width="500" height="150">
 </p>
 </div>
 
