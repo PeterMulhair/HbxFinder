@@ -112,7 +112,7 @@ def second_blast(fasta):
     #Search for hbx genes with mmseq easy-search
     print('\n')
     print('Running MMseqs;',sp_assem)
-    unix('mmseqs easy-search ../../data_hbx/' + args.group + '_data/family_data/' + args.gene + '.fasta ' + fasta + ' hbx_mmseqoutput/' + sp_assem + '_' + args.gene + '.m8 tmp --spaced-kmer-pattern 1101111 -k 6 -a -e 1 --num-iterations 2', shell=True)
+    unix('mmseqs easy-search ../../data_hbx/' + args.group + '_data/family_data/' + args.gene + '.fasta ' + fasta + ' hbx_mmseqoutput/' + sp_assem + '_' + args.gene + '.m8 tmp --spaced-kmer-pattern 1101111 -k 6 -a -e 1 --num-iterations 2 -v 0', shell=True)
     mmseq_outfile.append(sp_assem + '_' + args.gene + '.m8')
 
 
