@@ -150,7 +150,6 @@ for mmseq_out in mmseq_outfile:
             hbx_start = int(scaff.split('|')[1]) + 1000
             hbx_end = int(scaff.split('|')[2]) - 1000
             hbx_len = hbx_start, hbx_end
-            hbx_orientation = gene_orientation[hbx_len]
                         
             perc_ident = float(lines[2])*100
             qstart = lines[6]
@@ -158,9 +157,11 @@ for mmseq_out in mmseq_outfile:
             if int(lines[8]) < int(lines[9]):
                 sstart = int(lines[8])
                 send = int(lines[9])
+                hbx_orientation = 'R'
             else:
                 sstart = int(lines[9])
                 send = int(lines[8])
+                hbx_orientation = 'L'
 
             query_start_diff = int(qstart) - 1
             query_start_diff = query_start_diff*3
@@ -181,6 +182,6 @@ for mmseq_out in mmseq_outfile:
                     continue
             blast_hit = ''.join(blast_hit)
 
-            outF.write('>' + sp + '|' + hbx_gene +  '|' + contig + '|' + str(hbx_start) + '|' + str(hbx_end) + '|' + '\n' + blast_hit + '\n')
+            outF.write('>' + sp + '|' + hbx_gene +  '|' + contig + '|' + str(hbx_start) + '|' + str(hbx_end) + '|' + hbx_orientation + '\n' + blast_hit + '\n')
             
 outF.close()
