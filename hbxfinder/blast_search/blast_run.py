@@ -15,6 +15,7 @@ parse = argparse.ArgumentParser()
 
 parse.add_argument("--path",type=str, help="path to genomes in fasta format",required=True)
 parse.add_argument("--group",type=str, help="group of animals to use as seed search i.e. vertebrate or invertebrate",required=True)
+parse.add_argument("--threads",type=int, help="path to genomes in fasta format",required=False)
 
 args = parse.parse_args()
 
@@ -46,8 +47,11 @@ def hbx_blast(fasta):
         #Search for hbx genes in unannotated genomes
         unix('tblastn -query ../../data_hbx/' + args.group + '_data/homeobox.fasta -db genome_blastdb/' + sp_name + ' -evalue 1 -seg yes -max_target_seqs 5000 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + sp_name + '.blastoutput.tsv', shell=True)
 
-if len(db_list) >= 1:        
-        Parallel(n_jobs=45)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)
+if len(db_list) >= 1:
+        if args.threads:
+                Parallel(n_jobs=args.threads)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)
+        else:
+                Parallel(n_jobs=1)(delayed(hbx_blast)(sp_assem) for sp_assem in db_list)
 else:
         print('No new genomes to annotate')
         sys.exit()
