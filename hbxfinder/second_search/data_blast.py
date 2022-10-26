@@ -21,6 +21,9 @@ parse.add_argument("--group",type=str, help="group of animals to use as seed sea
 
 args = parse.parse_args()
 
+args.path = os.path.abspath(args.path)
+args.path = args.path + '/'
+
 #Check MMseqs is installed
 if shutil.which('mmseqs') is None:
     sys.exit('ERROR: MMseqs not installed locally')
