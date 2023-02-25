@@ -20,8 +20,7 @@ parse.add_argument("--group",type=str, help="group of animals to use as seed sea
 
 args = parse.parse_args()
 
-intron_list = ['Pb', 'Ro', 'Abd-B', 'lab']
-#intron_list = ['Msx', 'NK1', 'NK4', 'NK6', 'Emx']
+#intron_list = ['Pb', 'Ro', 'Abd-B', 'lab']
 
 ##Check if sixpack is installed localy
 if shutil.which('sixpack') is None:
@@ -48,7 +47,7 @@ genome_hbx_seqs = defaultdict(list)
 with open('../recip_blast/genome_' + args.gene + '_recipBlast.fasta') as f:
     for record in SeqIO.parse(f, 'fasta'):
         header = record.description
-        sp = header.split('|')[0]
+        sp = header.split('|')[0].split('_blast')[0]
         gene = header.split('|')[1]
         geneName = hbx_dict[gene]
         contig = header.split('|')[2]
@@ -57,7 +56,8 @@ with open('../recip_blast/genome_' + args.gene + '_recipBlast.fasta') as f:
         seq = str(record.seq)
         header = sp + '|' + geneName + '|' + contig + '|' + gene_start + '|' + gene_end + '|'
         genome_hbx_seqs[header].append(seq)
-        
+
+
 ##Parse cluster file and output nucleotide sequences
 count=0
 gene_nuc_data = {}
@@ -78,24 +78,19 @@ with open('../recip_blast/hbx_clusters/' + args.gene + '_cluster.txt') as f, ope
                 else:
                     gene_info = gene.split('\t')
                     contig = gene_info[0]
-                    #gene_start = gene_info[1].split(',')[0].strip('(')
-                    #gene_end = gene_info[1].split(', ')[1].strip(')')
                     gene_start = gene_info[1]
                     gene_end = gene_info[2]
                     gene_end = int(gene_end) + 1
-                    gene_end = str(gene_end)
+                    gene_end = str(gene_end)                    
                     geneName = gene_info[3]
                     
                     #Get the nucleotide sequence for the gene from the recip blast fasta file
                     gene_header_search = spName + '|' + geneName + '|' + contig + '|' + gene_start + '|' + gene_end + '|'
-                    #print(gene_header_search)
                     gene_nuc_seq = genome_hbx_seqs[gene_header_search]
-                    #print(gene_nuc_seq)
                     gene_header = spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end
                     try:
                         outF.write('>' + gene_header + '\n' + gene_nuc_seq[0] + '\n')
                     except:
-                        #print(gene_header)
                         count+=1
                         continue
                     if '_' in contig:
@@ -114,7 +109,7 @@ with open('../recip_blast/hbx_clusters/' + args.gene + '_cluster.txt') as f, ope
                         with open('temp_seqs/' + args.gene + '/' + spName + '_' + geneName + '_' + contig + '_' + gene_start + '_' + gene_end + '.fasta', 'w') as outF3:
                             outF3.write('>' + gene_header + '\n' + gene_nuc_seq[0] + '\n')
 
-#print(count, 'genes with naming err')
+
 ##Translate nucleotide hbx sequences
 os.chdir('temp_seqs/' + args.gene)
 for fasta in glob.glob("*.fasta"):
