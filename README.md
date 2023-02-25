@@ -81,7 +81,7 @@ The final output files are found in `HbxFinder/hbxfinder/second_search/recip_bla
 
 The last step outputs fasta files of the nucleotide and amino acid sequences for the homeodomain of each homeobox gene class.
 
-`python get_seq_data.py --gene <specify class of hbx gene> `
+`python get_seq_data.py --gene <specify class of hbx gene> --group <invertebrate or vertebrate>`
 
 
 - Required:
