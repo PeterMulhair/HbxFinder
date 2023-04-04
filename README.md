@@ -30,7 +30,7 @@ To run, download this repo locally using `git clone https://github.com/PeterMulh
 
 - Required:
   - **`directory`** First change dir with `cd HbxFinder/hbxfinder/blast_search`. This puts you in the correct directory to run the blast script.
-  - **`genomes`** Path to a folder containing the raw genome assemblies you wish to search. It is preferred if you provide the full path name to where genomes are stored.
+  - **`genomes`** Path to a folder containing the raw genome assemblies you wish to search.
 - Output: Blast output files in output format 6. The most important file for the next step is present at `recip_blast/blast_parsed_output.fasta`
 
 #### 1.2
@@ -58,7 +58,7 @@ The second similarity search uses MMseqs to carry out a more sensitive search of
 
 - Required:
   - **`directory`** First change dir with `cd HbxFinder/hbxfinder/second_search`. This puts you in the correct directory to run the blast script.
-  - **`genomes`** Path to raw genome assemblies you wish to search. Again, it is preferred if you provide the full path name to where genomes are stored.
+  - **`genomes`** Path to raw genome assemblies you wish to search.
   - **`gene`** Name of homeobox gene class you wish to search for eg. HOX
 
 #### 2.2
@@ -74,6 +74,8 @@ $ python summarise_Hbx.py --taxa species_hbx/<species reciprocal blastoutput fil
 ```
 
 The final output files are found in `HbxFinder/hbxfinder/second_search/recip_blast/hbx_clusters/`
+
+These files are the final set of annotated homeobox genes, ordered by position in the genome, and provides a percent identity score as well as start and stop regions of the homeodomain.
 
 ---
 
