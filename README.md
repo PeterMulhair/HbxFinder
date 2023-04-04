@@ -96,4 +96,5 @@ The last step outputs fasta files of the nucleotide and amino acid sequences for
 - This pipeline only annotates the homeodomain sequence rather than the full open reading frame.
 - It is recommended to manually inspect and edit the cluster files as well as the output fasta files to ensure accuracy in the order and content of the homeobox genes eg. if there is an intron in the homeodomain sequence, that gene will be annotated in two parts - you can edit this manually by checking the size of the homeodomain sequences.
 - To get most accurate output, particularly for homeobox genes grouped in a cluster, it is recommended to run this script on high quality genome assemblies.
+- If you use this pipeline please cite the following papers: [Zhong & Holland 2011](https://onlinelibrary.wiley.com/doi/full/10.1111/j.1525-142X.2011.00513.x) & [Mulhair et al. 2022](https://genome.cshlp.org/content/33/1/32)
 - If you have any questions or run into any issues please feel free to contact me by raising an issue or emailing me at `peter.mulhair@biology.ox.ac.uk`
