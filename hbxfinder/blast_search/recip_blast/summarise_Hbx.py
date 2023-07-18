@@ -67,7 +67,7 @@ hbx_gene_dict = hbx_naming_dict[args.gene]
 
 os.makedirs('hbx_contigs', exist_ok=True)
 outF = open('hbx_contigs/' + args.gene + '_cluster.txt', 'a+')
-sp_assem = args.taxa.split('_hbx.fa')[0]
+sp_assem = args.taxa.split('_hbx.tsv')[0]
 outF.write('>' + sp_assem + '\n')
 for contig, seq_range_list in contig_seq_ranges.items():
 
