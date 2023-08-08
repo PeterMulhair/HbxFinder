@@ -43,7 +43,7 @@ def hbx_blast(fasta):
         sp_name = sp_file.split('.fast')[0]
         print('Running BLAST;', sp_name)
         #Make blast database from genome fasta files
-        unix('makeblastdb -dbtype nucl -in ' + fasta + ' -out genome_blastdb/' + sp_name, shell=True)
+        unix('makeblastdb -dbtype nucl -in ' + fasta + ' -out genome_blastdb/' + sp_name + ' >/dev/null', shell=True)
         #Search for hbx genes in unannotated genomes
         unix('tblastn -query ../../data_hbx/' + args.group + '_data/homeobox.fasta -db genome_blastdb/' + sp_name + ' -evalue 1 -seg yes -max_target_seqs 5000 -outfmt "6 qseqid sseqid evalue pident bitscore qstart qend qlen sstart send slen" -out ' + sp_name + '.blastoutput.tsv', shell=True)
 
